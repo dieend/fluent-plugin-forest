@@ -6,7 +6,7 @@ class Fluent::ForestOutput < Fluent::MultiOutput
   config_param :add_prefix, :string, :default => nil
   config_param :hostname, :string, :default => `hostname`.chomp
   config_param :escape_tag_separator, :string, :default => '_'
-
+  config_param :parts_range_separator, :string, :default => '.'
   attr_reader :outputs
 
   # Define `log` method for v0.10.42 or earlier
@@ -78,7 +78,7 @@ class Fluent::ForestOutput < Fluent::MultiOutput
           exclude_end = (matched[:range_type] == '...')
           range = Range.new(matched[:first].to_i, matched[:last].to_i, exclude_end)
           if tag_parts[range]
-            tag_parts[range].join(".")
+            tag_parts[range].join(@parts_range_separator)
           else
             log.warn "out_forest: missing placeholder. tag:#{tag} placeholder:#{tag_parts_matched} conf:#{k} #{v}"
             nil
